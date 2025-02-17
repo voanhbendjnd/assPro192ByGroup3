@@ -23,9 +23,10 @@ public class CreateAccount {
         Scanner sc = new Scanner(System.in);
         boolean check = true;
         Menu menu = new Menu();
-        AccountRole reader = new AccountRole();
+        HandleAccount reader = new HandleAccount();
         List<Account> accountList = reader.read(txt);
         List<Account> auth = new ArrayList<>();
+        Long code = 0L;
 
         while (check) {
             System.out.print("Login or Sign in (1/2): ");
@@ -39,15 +40,19 @@ public class CreateAccount {
                 System.out.print("Please enter password: ");
                 String password = sc.nextLine();
                 boolean checkLogin = false;
+                Long userId = null;
                 for(Account x : auth){
                     if(x.getUsername().equals(user) && x.getPassword().equals(password)){
                         checkLogin = true;
+                        
                         if(x.getRole() == 1){
-                            menu.getMenu();
+                            menu.getMenu(x.getId());
+                            userId = x.getId();
                             break;
                         }
                         else{
-                            menu.getMenuUser();
+                            menu.getMenuUser(x.getId());
+                            userId = x.getId();
                             break;
                         }
                     }
@@ -57,9 +62,9 @@ public class CreateAccount {
                         checkLogin = true;
                         System.out.println("Login success!");
                         if (acc.getRole() == 1) {
-                            menu.getMenu();
+                            menu.getMenu(userId);
                         } else if (acc.getRole() == 2) {
-                            menu.getMenuUser();
+                            menu.getMenuUser(userId);
                         }
                         break;
                     }
@@ -86,10 +91,21 @@ public class CreateAccount {
                 }
 
                 if (uniqueEmail) {
-                    AccountRole ar = new AccountRole();
+                    if(accountList.isEmpty()){
+                        code = 0L;
+                    }
+                    else{
+                        for (Account x : accountList) {
+                            if (x.getId() >= code) {
+                                code = x.getId();
+                            }
+                        }
+                    }
+                   
+                    HandleAccount ar = new HandleAccount();
                     Long role = filterRole(user, password) ? 1L : 2L;
-                    ar.addAccount(txt, new Account(user, password, email, role));
-                    auth.add(new Account(user, password, email, role));
+                    ar.addAccount(txt, new Account(code + 1, user, password, email, role));
+                    auth.add(new Account(code + 1, user, password, email, role));
                     System.out.println("Account created successfully!");
 //                    accountList = reader.read(txt);
                 } else {

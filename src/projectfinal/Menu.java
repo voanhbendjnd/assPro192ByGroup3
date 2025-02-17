@@ -36,8 +36,10 @@ import java.util.List;
  */
 public class Menu {
 
-    private static final String filetxt = "products.txt";
-  
+    Scanner sc = new Scanner(System.in);
+
+    private static String filetxt = "products.txt";
+
     public static void findAll() {
         ReadFile reader = new ReadFile();
         System.out.println("---------Products List---------");
@@ -180,7 +182,8 @@ public class Menu {
         Products.printTable(proListed);
     }
 
-    public void buyProduct() {
+    public void buyProduct(Long ide) {
+        Long orderId = 0L;
         ReadFile reader = new ReadFile();
         Scanner sc = new Scanner(System.in);
         System.out.print("Please enter id product your choice: ");
@@ -207,11 +210,23 @@ public class Menu {
                 checkProduct = true;
             }
         }
-        if(stock == 0){
+        if (stock == 0) {
             System.out.println("Please enter other product");
             checkProduct = false;
         }
         if (checkProduct) {
+            List<Orders> orderList = new HandleOrder().read("order.txt");
+            if(orderList.isEmpty()){
+                orderId = 0L;
+            }
+            else{
+                for (Orders x : orderList) {
+                    if (x.getId() >= orderId) {
+                        orderId = x.getId();
+                    }
+                }
+            }
+            
             System.out.println("Product you choice with id = " + id);
             System.out.println("Name: " + name);
             System.out.println("Brand: " + brand);
@@ -223,13 +238,22 @@ public class Menu {
                 Long currentStock = stock - 1L;
                 Products pro = new Products(code, name, brand, price, desc, currentStock, date);
                 reader.deleteProduct(filetxt, name, brand, code);
-                
-                if(currentStock == 0){
+
+                if (currentStock == 0) {
                     reader.deleteProduct(filetxt, name, brand, code);
+                } else {
+                    reader.addProduct(filetxt, pro);
                 }
-                else{
-                    reader.addProduct(filetxt,pro);
-                }
+                System.out.println("Please enter information order");
+                System.out.print("Name: ");
+                String nameUser = sc.nextLine();
+                System.out.print("Address: ");
+                String address = sc.nextLine();
+                System.out.print("Phone Number: ");
+                String phone = sc.nextLine();
+                HandleOrder order = new HandleOrder();
+                order.addOrder("order.txt", new Orders(orderId + 1, ide, id, nameUser, address, phone));
+                
                 System.out.println("Order successfull");
             }
         } else {
@@ -237,7 +261,12 @@ public class Menu {
         }
     }
 
-    public void getMenuUser() {
+    public static void tableOrder(){
+        List<Orders> orderList = new HandleOrder().read("order.txt");
+        Orders.printTableOrder(orderList);
+        
+    }
+    public void getMenuUser(Long id) {
         findAll();
         while (true) {
             Scanner sc = new Scanner(System.in);
@@ -245,6 +274,7 @@ public class Menu {
             System.out.println("1.Find Phone");
             System.out.println("2.Find All Products");
             System.out.println("3.Buy Product");
+            System.out.println("4.Add Product to Cart");
             System.out.println("0.Exit");
             System.out.print("Select option: ");
             int q = sc.nextInt();
@@ -254,9 +284,11 @@ public class Menu {
                 } else if (q == 2) {
                     findAll();
                 } else if (q == 3) {
-                    buyProduct();
+                    buyProduct(id);
                 } else if (q == 0) {
                     break;
+                } else if (q == 4) {
+
                 } else {
                     System.out.print("Please enter for my option: ");
                 }
@@ -267,7 +299,7 @@ public class Menu {
         }
     }
 
-    public void getMenu() {
+    public void getMenu(Long id) {
         findAll();
         while (true) {
             Scanner sc = new Scanner(System.in);
@@ -276,6 +308,7 @@ public class Menu {
             System.out.println("2.Add Phone");
             System.out.println("3.Delete Phone");
             System.out.println("4.Find All Products");
+            System.out.println("5.View Order");
             System.out.println("0.Exit");
             System.out.print("Select option: ");
             int q = sc.nextInt();
@@ -289,7 +322,7 @@ public class Menu {
                 } else if (q == 4) {
                     findAll();
                 } else if (q == 5) {
-
+                    tableOrder();
                 } else {
                     break;
                 }

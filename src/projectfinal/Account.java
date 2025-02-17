@@ -36,6 +36,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.List;
 public class Account {
+    private Long id;
     private String username;
     private String password;
     private String email;
@@ -43,11 +44,20 @@ public class Account {
     public Account() {
     }
 
-    public Account(String username, String password, String email, Long role) {
+    public Account(Long id, String username, String password, String email, Long role) {
         this.username = username;
         this.password = password;
         this.role = role;
         this.email = email;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     private Long role;
 
@@ -88,7 +98,7 @@ public class Account {
         this.password = password;
     }
      public String toStringFormatted() {
-        return this.username + "?" + this.password + "?" + this.email + "?" + this.role;
+        return this.id + "?" + this.username + "?" + this.password + "?" + this.email + "?" + this.role;
     }
     
 }

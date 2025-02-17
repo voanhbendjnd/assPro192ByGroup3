@@ -17,7 +17,7 @@ import java.io.IOException;
 public class CreateFile {
     public static void main(String[] args) {
         try{
-            File myFile = new File("cartProduct.txt");
+            File myFile = new File("carts.txt");
             if(myFile.createNewFile()){
                 System.out.println("File with " + myFile.getName());
             }

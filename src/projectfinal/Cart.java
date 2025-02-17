@@ -37,17 +37,53 @@ import java.util.List;
  * @author Vo Anh Ben - CE190709
  */
 public class Cart {
-    private Long qty;
-    private String name;
-    private String userName;
+    private Long cartId;
+    private String productName;
     private Long price;
+    private Long qty;
+    private Long total;
+    private Long userId;
 
-    public String getUserName() {
-        return userName;
+    public Cart(Long cartId, String productName, Long price, Long qty,Long total, Long userId) {
+        this.cartId = cartId;
+        this.productName = productName;
+        this.price = price;
+        this.qty = qty;
+        this.userId = userId;
+        this.total = total;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getTotalPrice() {
+        return qty * price;
+    }
+
+    
+
+    public Cart() {
+    }
+
+    public Long getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Long getPrice() {
@@ -58,38 +94,15 @@ public class Cart {
         this.price = price;
     }
 
-    public Cart(String name, Long price) {
-        this.name = name;
-        this.price = price;
-    }
-    
-
-    public Cart(Long qty, String name) {
-        this.qty = qty;
-        this.name = name;
-    }
-
     public Long getQty() {
         return qty;
-    }
-
-    public Cart(String userName, String name) {
-        this.name = name;
-        this.userName = userName;
     }
 
     public void setQty(Long qty) {
         this.qty = qty;
     }
-
-    public String getName() {
-        return name;
+     public String toStringFormatted() {
+        return this.cartId + "?" + this.productName + "?" + this.price + "?" + this.qty +"?" + this.getTotalPrice() + "?" + this.userId;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String toString(){
-        return "Your Cart: " + this.name + " " + this.price;
-    }
+   
 }
